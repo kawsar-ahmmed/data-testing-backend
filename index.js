@@ -36,13 +36,16 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("MongoDb Connected");
+        const database = client.db("FoodExpress");
+        const haiku = database.collection("haiku");
+        // create a document to insert
+        const doc = {
+            title: "Record of a Shriveled Datum",
+            content: "No bytes, no problem. Just insert a document, in MongoDB",
+        }
+        const result = await haiku.insertOne(doc);
+        console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } finally {
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 
